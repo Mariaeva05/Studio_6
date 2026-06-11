@@ -1,0 +1,239 @@
+// 6 Ακίδες ΑΠΟΚΛΕΙΣΤΙΚΑ για τα Piezo
+// Δείκτες:      0  1   2   3   4   5
+const int piezoPins[6] = {8, 9, 10, 11, 12, 13}; 
+
+// 15 Ακίδες για τα Κουμπιά των Συγχορδιών
+const int buttonPins[] = {25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51, 53}; 
+const int numButtons = 15;
+
+// Πίνακας με τις 6 ακίδες ενεργοποίησης (Strumming)
+// Δείκτες:      0   1   2   3   4   5
+const int strumPins[6] = {16, 17, 18, 19, 20, 21};
+
+// ΝΕΟΣ ΠΙΝΑΚΑΣ: 6 ακίδες για τα αντίστοιχα Λαμπάκια (LED)
+// Δείκτες:    0  1  2  3  4  5
+const int ledPins[6] = {7, 6, 5, 4, 3, 2};
+
+// ΑΝΤΙΣΤΟΙΧΙΣΗ ID ΚΟΥΜΠΙΩΝ
+#define BTN_A_MIN    0  // Am
+#define BTN_C_MAJ    1  // C
+#define BTN_G_7      2  // G7
+#define BTN_E_MIN    3  // Em
+#define BTN_G_MAJ    4  // G
+#define BTN_D_7      5  // D7
+#define BTN_B_MIN    6  // Bm
+#define BTN_D_MAJ    7  // D
+#define BTN_A_7      8  // A7
+#define BTN_FS_MIN   9  // F#m
+#define BTN_A_MAJ    10 // A
+#define BTN_E_7      11 // E7
+#define BTN_D_MIN    12 // Dm
+#define BTN_F_MAJ    13 // F
+#define BTN_C_7      14 // C7
+
+// --- ΟΡΙΣΜΟΣ ΝΟΤΩΝ ---
+const int NOTE_C3  = 131;
+const int NOTE_C_SHARP3 = 139;
+const int NOTE_D3  = 147;
+const int NOTE_D_SHARP3 = 156;
+const int NOTE_E3  = 165;
+const int NOTE_F3  = 175;
+const int NOTE_F_SHARP3 = 185;
+const int NOTE_G3  = 196;
+const int NOTE_G_SHARP3 = 208;
+const int NOTE_A3  = 220;
+const int NOTE_A_SHARP3 = 233;
+const int NOTE_B3  = 247;
+const int NOTE_C4  = 262;
+const int NOTE_C_SHARP4 = 277;
+const int NOTE_D4  = 294;
+const int NOTE_D_SHARP4 = 311;
+const int NOTE_E4  = 330;
+const int NOTE_F4  = 349;
+const int NOTE_F_SHARP4 = 370;
+const int NOTE_G4  = 392;
+const int NOTE_G_SHARP4 = 415;
+const int NOTE_A4  = 440;
+const int NOTE_A_SHARP4 = 466;
+const int NOTE_B4  = 494;
+const int NOTE_C5  = 523;
+const int NOTE_D5  = 587;
+const int NOTE_E5  = 659;
+
+// ΠΙΝΑΚΑΣ ΜΟΝΩΝ ΚΟΥΜΠΙΩΝ (15 βασικές συγχορδίες)
+const int guitarChords[15][6] = {
+  {0,             NOTE_A3,       NOTE_E3,       NOTE_A3,       NOTE_C4,       NOTE_E4},       // 0. Am
+  {0,             NOTE_C3,       NOTE_E3,       NOTE_G3,       NOTE_C4,       NOTE_E4},       // 1. C
+  {NOTE_G3,       NOTE_B3,       NOTE_D4,       NOTE_G3,       NOTE_B3,       NOTE_F4},       // 2. G7
+  {NOTE_E3,       NOTE_B3,       NOTE_E3,       NOTE_G3,       NOTE_B3,       NOTE_E4},       // 3. Em
+  {NOTE_G3,       NOTE_B3,       NOTE_D4,       NOTE_G3,       NOTE_B3,       NOTE_G4},       // 4. G
+  {0,             0,             NOTE_D4,       NOTE_A3,       NOTE_C4,       NOTE_F_SHARP4}, // 5. D7
+  {0,             NOTE_B3,       NOTE_F_SHARP3, NOTE_B3,       NOTE_D4,       NOTE_F_SHARP4}, // 6. Bm
+  {0,             0,             NOTE_D4,       NOTE_A3,       NOTE_D4,       NOTE_F_SHARP4}, // 7. D
+  {0,             NOTE_A3,       NOTE_E3,       NOTE_G3,       NOTE_C_SHARP4, NOTE_E4},       // 8. A7
+  {NOTE_F_SHARP3, NOTE_C_SHARP3, NOTE_F_SHARP3, NOTE_A3,       NOTE_C_SHARP4, NOTE_F_SHARP4}, // 9. F#m
+  {0,             NOTE_A3,       NOTE_E3,       NOTE_A3,       NOTE_C_SHARP4, NOTE_E4},       // 10. A
+  {NOTE_E3,       NOTE_B3,       NOTE_D4,       NOTE_G_SHARP3, NOTE_B3,       NOTE_E4},       // 11. E7
+  {0,             0,             NOTE_D4,       NOTE_A3,       NOTE_D4,       NOTE_F4},       // 12. Dm
+  {NOTE_F3,       NOTE_C3,       NOTE_F3,       NOTE_A3,       NOTE_C4,       NOTE_F4},       // 13. F
+  {0,             NOTE_C3,       NOTE_A_SHARP3, NOTE_G3,       NOTE_C4,       NOTE_E4}        // 14. C7
+};
+
+// ΠΙΝΑΚΑΣ ΓΙΑ ΔΙΠΛΑ ΚΟΥΜΠΙΑ 
+const int comboChords[11][6] = {
+  {0,             NOTE_C3,       NOTE_E3,       NOTE_G3,       NOTE_B3,       NOTE_E4},       // 0. Cmaj7  (Am + C)
+  {NOTE_G3,       NOTE_B3,       NOTE_D4,       NOTE_F_SHARP4, NOTE_B4,       NOTE_G4},       // 1. Gmaj7  (Em + G)
+  {0,             NOTE_D4,       NOTE_F_SHARP3, NOTE_A3,       NOTE_C_SHARP4, NOTE_F_SHARP4}, // 2. Dmaj7  (Bm + D)
+  {0,             NOTE_A3,       NOTE_E3,       NOTE_G_SHARP3, NOTE_C_SHARP4, NOTE_E4},       // 3. Amaj7  (F#m + A)
+  {0,             0,             NOTE_D4,       NOTE_A3,       NOTE_C4,       NOTE_E4},       // 4. Fmaj7  (Dm + F)
+  {NOTE_G3,       NOTE_B3,       NOTE_D4,       NOTE_F4,       NOTE_A4,       NOTE_G4},       // 5. G9     (C + G7)
+  {0,             0,             NOTE_D4,       NOTE_A3,       NOTE_C4,       NOTE_E4},       // 6. D9     (G + D7)
+  {0,             NOTE_A3,       NOTE_E3,       NOTE_G3,       NOTE_B3,       NOTE_C_SHARP4}, // 7. A9     (D + A7)
+  {0,             NOTE_A3,       NOTE_D4,       NOTE_G3,       NOTE_C4,       NOTE_E4},       // 8. Am11   (Am + G7)
+  {NOTE_G3,       NOTE_C4,       NOTE_D4,       NOTE_G3,       NOTE_D4,       NOTE_G4},       // 9. Gsus4  (C + G)
+  {0,             0,             NOTE_D4,       NOTE_A3,       NOTE_D4,       NOTE_G4}        // 10. Dsus4 (G + D)
+};
+
+unsigned long toggleMicroseconds[6];
+unsigned long lastToggleTime[6];
+int piezoState[6] = {LOW, LOW, LOW, LOW, LOW, LOW};
+
+int lastPressedCount = 0;
+
+void setup() {
+  for (int i = 0; i < 6; i++) {
+    pinMode(piezoPins[i], OUTPUT);
+    lastToggleTime[i] = 0;
+  }
+  for (int i = 0; i < numButtons; i++) {
+    pinMode(buttonPins[i], INPUT_PULLUP);
+  }
+  for (int i = 0; i < 6; i++) {
+    pinMode(strumPins[i], INPUT_PULLUP);
+    pinMode(ledPins[i], OUTPUT);
+    digitalWrite(ledPins[i], LOW); 
+  }
+}
+
+void loop() {
+  int firstPressed = -1;
+  int secondPressed = -1;
+  int pressedCount = 0;
+
+  // 1ο Πέρασμα: Γρήγορη ανίχνευση συγχορδιών
+  for (int i = 0; i < numButtons; i++) {
+    if (digitalRead(buttonPins[i]) == LOW) {
+      if (pressedCount == 0) firstPressed = i;
+      pressedCount++;
+    }
+  }
+
+  if (pressedCount > 0 && lastPressedCount == 0) {
+    delay(15); 
+    
+    pressedCount = 0;
+    firstPressed = -1;
+    for (int i = 0; i < numButtons; i++) {
+      if (digitalRead(buttonPins[i]) == LOW) {
+        if (pressedCount == 0) {
+          firstPressed = i;
+        } else if (pressedCount == 1) {
+          secondPressed = i;
+        }
+        pressedCount++;
+      }
+    }
+  }
+  
+  lastPressedCount = pressedCount;
+
+  int currentChord[6] = {0, 0, 0, 0, 0, 0};
+  bool playSound = false;
+
+  if (pressedCount == 1) {
+    for(int i=0; i<6; i++) currentChord[i] = guitarChords[firstPressed][i];
+    playSound = true;
+  } 
+  else if (pressedCount >= 2) {
+    playSound = true; 
+    
+    if (firstPressed > secondPressed) {
+      int temp = firstPressed;
+      firstPressed = secondPressed;
+      secondPressed = temp;
+    }
+
+    // --- ΛΟΓΙΚΗ ΣΥΝΔΥΑΣΜΩΝ ---
+    if (firstPressed == BTN_A_MIN && secondPressed == BTN_C_MAJ) {
+      for(int i=0; i<6; i++) currentChord[i] = comboChords[0];  
+    }
+    else if (firstPressed == BTN_E_MIN && secondPressed == BTN_G_MAJ) {
+      for(int i=0; i<6; i++) currentChord[i] = comboChords[1];  
+    }
+    else if (firstPressed == BTN_B_MIN && secondPressed == BTN_D_MAJ) {
+      for(int i=0; i<6; i++) currentChord[i] = comboChords[2];  
+    }
+    else if (firstPressed == BTN_FS_MIN && secondPressed == BTN_A_MAJ) {
+      for(int i=0; i<6; i++) currentChord[i] = comboChords[3];  
+    }
+    else if (firstPressed == BTN_D_MIN && secondPressed == BTN_F_MAJ) {
+      for(int i=0; i<6; i++) currentChord[i] = comboChords[4];  
+    }
+    else if (firstPressed == BTN_C_MAJ && secondPressed == BTN_G_7) {
+      for(int i=0; i<6; i++) currentChord[i] = comboChords[5];  
+    }
+    else if (firstPressed == BTN_D_7 && secondPressed == BTN_G_MAJ) { 
+      for(int i=0; i<6; i++) currentChord[i] = comboChords[6];  
+    }
+    else if (firstPressed == BTN_D_MAJ && secondPressed == BTN_A_7) {
+      for(int i=0; i<6; i++) currentChord[i] = comboChords[7];  
+    }
+    else if (firstPressed == BTN_A_MIN && secondPressed == BTN_G_7) {
+      for(int i=0; i<6; i++) currentChord[i] = comboChords[8];  
+    }
+    else if (firstPressed == BTN_C_MAJ && secondPressed == BTN_G_MAJ) {
+      for(int i=0; i<6; i++) currentChord[i] = comboChords[9];  
+    }
+    else if (firstPressed == BTN_G_MAJ && secondPressed == BTN_D_MAJ) {
+      for(int i=0; i<6; i++) currentChord[i] = comboChords[10]; 
+    }
+    else {
+      for(int i=0; i<6; i++) currentChord[i] = guitarChords[firstPressed][i];
+    }
+  }
+
+  // --- ΑΝΑΘΕΣΗ ΣΥΧΝΟΤΗΤΩΝ & ΕΛΕΓΧΟΣ LED ---
+  for (int i = 0; i < 6; i++) {
+    // Διαβάζουμε την κατάσταση του strumPin
+    int buttonState = digitalRead(strumPins[i]);
+    
+    // ΑΠΟΛΥΤΟΣ ΕΛΕΓΧΟΣ LED: Αν το κουμπί πατηθεί (LOW λόγω INPUT_PULLUP)
+    if (buttonState == LOW) {
+      digitalWrite(ledPins[i], HIGH); 
+    } else {
+      digitalWrite(ledPins[i], LOW);  
+    }
+
+    // Ήχος (με την αντίστροφη σειρά χορδών [5 - i])
+    int targetStrumPin = strumPins[5 - i]; 
+    if (playSound && currentChord[i] > 0 && digitalRead(targetStrumPin) == LOW) {
+      toggleMicroseconds[i] = 500000 / currentChord[i]; 
+    } else {
+      toggleMicroseconds[i] = 0; 
+    }
+  }
+  
+  // ΠΑΡΑΓΩΓΗ ΠΑΛΜΟΥ
+  unsigned long currentMicros = micros();
+  for (int i = 0; i < 6; i++) {
+    if (toggleMicroseconds[i] > 0) {
+      if (currentMicros - lastToggleTime[i] >= toggleMicroseconds[i]) {
+        lastToggleTime[i] = currentMicros;
+        piezoState[i] = !piezoState[i];
+        digitalWrite(piezoPins[i], piezoState[i]);
+      }
+    } else {
+      digitalWrite(piezoPins[i], LOW);
+    }
+  }
+}
